@@ -12,7 +12,7 @@
 - 2021 - 04 - 01 Update slow motion when hitting the ball and clean the integration
 
 
-## tf-pose-estimation 
+## TF_POSE_ESTIMATION 
 openpose is reference by https://github.com/ildoonet/tf-pose-estimation <br>
 **!! this is not the full code it's mainly for backup usage**
 
@@ -94,7 +94,7 @@ $ python run_webcam.py --model=mobilenet_thin --resize=432x368 --camera=0 --tens
 python3 newrunvideo.py --model=mobilenet_thin --video=./images/2.mp4 --write_video=./results.mp4
 ```
 
-## Background Subtraction using opencv
+## BACKGROUND SUBTRACTION
 
 Background subtraction (BS) is a common and widely used technique for generating a foreground mask (namely, a binary image containing the pixels belonging to moving objects in the scene) by using static cameras.<br>
 
@@ -154,9 +154,16 @@ Result After Bitwise And :
 
 ![](https://i.imgur.com/u5ZV8bG.png)
 
-### Usage
+### Python usage
 ```
 python3 main.py --input video.mp4
+```
+
+## INTERGRATION
+
+### Python usage
+```
+python final.py
 ```
 
 
