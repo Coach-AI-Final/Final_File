@@ -6,7 +6,8 @@
 - 2020 - 11  Apply player tracking in estimator.py
 - 2020 - 11  Update player tracking in estimator.py
 - 2020 - 11  Construct and training models to import by sklearn
-- 2020 - 12 - 20   Done background submission , bitwise and in file Background_subtraction
+- 2020 - 12 - 20   Done background subtraction , bitwise and in file Background_subtraction
+- 2021 - 03 - 11  Move the result of background subtraction to the normal video
 - 2021 - 03 - 18  Intergrate Ball_predict , rally_segment, pose_estimation into final.py
 - 2021 - 04 - 01 Update slow motion when hitting the ball and clean the integration
 
