@@ -135,22 +135,22 @@ while set_num <= 3:
 					x_test_2nd[i]=0
 					y_test_2nd[i]=0
 					abnormal2[i]='2bias1'
-				elif bf_dis[i+1]>100 and vis2[i+1]==1:
+				elif i+1<len(bf_dis) and bf_dis[i+1]>100 and vis2[i+1]==1:
 					if af_dis[i+1]<100:
 						x_test_2nd[i:i+2]=[0,0]
 						y_test_2nd[i:i+2]=[0,0]
 						abnormal2[i:i+2]=['2bias2','2bias2']
-				elif bf_dis[i+2]>100 and vis2[i+1:i+3]==[1,1]:
+				elif i+2<len(bf_dis) and bf_dis[i+2]>100 and vis2[i+1:i+3]==[1,1]:
 					if af_dis[i+1]<100 and af_dis[i+2]<100:
 						x_test_2nd[i:i+3]=[0,0,0]
 						y_test_2nd[i:i+3]=[0,0,0]
 						abnormal2[i:i+3]=['2bias3','2bias3','2bias3']
-				elif bf_dis[i+3]>100 and vis2[i+1:i+4]==[1,1,1]:
+				elif i+3<len(bf_dis) and bf_dis[i+3]>100 and vis2[i+1:i+4]==[1,1,1]:
 					if af_dis[i+1]<100 and af_dis[i+2]<100 and af_dis[i+3]<100:
 						x_test_2nd[i:i+4]=[0,0,0,0]
 						y_test_2nd[i:i+4]=[0,0,0,0]
 						abnormal2[i:i+4]=['2bias4','2bias4','2bias4','2bias4']
-				elif bf_dis[i+4]>100 and vis2[i+1:i+5]==[1,1,1,1]:
+				elif i+4<len(bf_dis) and bf_dis[i+4]>100 and vis2[i+1:i+5]==[1,1,1,1]:
 					if af_dis[i+1]<100 and af_dis[i+2]<100 and af_dis[i+3]<100 and af_dis[i+4]<100:
 						x_test_2nd[i:i+5]=[0,0,0,0,0]
 						y_test_2nd[i:i+5]=[0,0,0,0,0]
@@ -401,7 +401,7 @@ while set_num <= 3:
 		mis2_X = []
 		mis2_y = []
 		for i in range(len(mis2)):
-			if i == 0 or i == 1 or i ==2 or i ==len(mis2) or i ==len(mis2)-1 or i ==len(mis2)-2:
+			if i == 0 or i == 1 or i ==2 or i == len(mis2)-1 or i == len(mis2)-2 or i == len(mis2)-3:
 				mis2_X.append(mis1_X[i])
 				mis2_y.append(mis1_y[i])        
 			
@@ -474,7 +474,7 @@ while set_num <= 3:
 		mis4_X = []
 		mis4_y = []
 		for i in range(len(mis4)):
-			if i == 0 or i == 1 or i ==2 or i ==len(mis4) or i ==len(mis4)-1 or i ==len(mis4)-2:
+			if i == 0 or i == 1 or i ==2 or i ==len(mis4)-1 or i ==len(mis4)-2 or i ==len(mis4)-3:
 				mis4_X.append(mis3_X[i])
 				mis4_y.append(mis3_y[i])           
 			elif mis4[i-3:i+1] == [0,0,0,0]:
@@ -483,7 +483,7 @@ while set_num <= 3:
 
 			elif mis4[i] ==1:
 				miss_point = i
-				if mis3_X[miss_point-3]!=0 and mis3_X[miss_point-2]!=0 and mis3_X[miss_point-1]!=0 and mis3_X[miss_point+4]!=0 and mis3_X[miss_point+5]!=0 and mis3_X[miss_point+6]!=0:
+				if miss_point+6<len(mis3_X) and mis3_X[miss_point-3]!=0 and mis3_X[miss_point-2]!=0 and mis3_X[miss_point-1]!=0 and mis3_X[miss_point+4]!=0 and mis3_X[miss_point+5]!=0 and mis3_X[miss_point+6]!=0:
 					num_X = [mis3_X[miss_point-3],mis3_X[miss_point-2],mis3_X[miss_point-1],mis3_X[miss_point+4],mis3_X[miss_point+5],mis3_X[miss_point+6]]
 					num_y = [mis3_y[miss_point-3],mis3_y[miss_point-2],mis3_y[miss_point-1],mis3_y[miss_point+4],mis3_y[miss_point+5],mis3_y[miss_point+6]]
 					x_mis4 = np.array(num_X) 
@@ -514,7 +514,7 @@ while set_num <= 3:
 		mis5_X = []
 		mis5_y = []
 		for i in range(len(mis5)):
-			if i == 0 or i == 1 or i ==2 or i==3 or i ==len(mis5) or i ==len(mis5)-1 or i ==len(mis5)-2:
+			if i == 0 or i == 1 or i ==2 or i==3 or i ==len(mis5)-1 or i ==len(mis5)-2 or i ==len(mis5)-3:
 				mis5_X.append(mis4_X[i])
 				mis5_y.append(mis4_y[i])           
 			elif mis5[i-4:i+1] == [0,0,0,0,0]:
@@ -567,6 +567,6 @@ while set_num <= 3:
 		df['Y'] = mis5_y[:len(df['Y'])]
 
 		df.to_csv(path[:-4]+'_denoise.csv',index=False)
-		print("Save output file as " + path[:-4] + "denoise.csv")
+		print("Save output file as " + path[:-4] + "_denoise.csv")
 	set_num = set_num + 1
 
