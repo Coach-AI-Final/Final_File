@@ -5,6 +5,26 @@ from scipy.signal import find_peaks
 import csv
 import os
 
+def find_vel(i,x_list,y_list):
+	if i < 1 or i >= len(x_list):
+		return 0
+	if (x_list[i-1] == 0 and y_list[i-1] == 0) or (x_list[i] == 0 and y_list[i] == 0):
+		return 0
+	return (abs(x_list[i] - x_list[i-1])**2 + abs(y_list[i] - y_list[i-1])**2)**0.5
+
+def average_vel(i,x_list,y_list):
+	vel_sum = 0
+	n = 0
+	for m in range(i-2,i+3):
+		vel = find_vel(m,x_list,y_list)
+		if vel == 0:
+			continue
+		vel_sum += vel
+		n += 1
+	if n == 0:
+		return 0
+	return vel_sum/n
+
 def find_acc(i,x_list,y_list):
 	if i < 2 or i >= len(x_list):
 		return 0,0
@@ -18,7 +38,7 @@ def average(i,x_list,y_list):
 	n = 0
 	for m in range(i-2,i+3):
 		ax_temp,ay_temp = find_acc(m,x_list,y_list)
-		if (m < 0 or m > len(x_list)-3) or (ax_temp == 0 and ay_temp == 0):
+		if ax_temp == 0 and ay_temp == 0:
 			continue
 		ax_sum += abs(ax_temp)
 		ay_sum += abs(ay_temp)
@@ -82,13 +102,23 @@ while set_num <= 3:
 			avg_ay.append(avg_ay_temp)
 			avg_z.append(i)
 
+		first_non_zero = 0
+		for i in range(len(x)):
+			if average_vel(i,x,y) != 0:
+				first_non_zero = i
+				break
+
 		# peaks, properties = find_peaks(avg_ay, prominence=3, distance=8, height=3)
 		peaks, properties = find_peaks(avg_ay, prominence=3, distance=8)
 		peak_y = []
 		peak_x = []
 		for i in range(len(peaks)):
-			# if i == len(peaks)-1 and len(peaks) > 1:
-			# 	break
+			if i == 0:
+				avg_ax_temp,avg_ay_temp = average(first_non_zero,x,y)
+				peak_y.append(avg_ay_temp)
+				peak_x.append(first_non_zero)
+				if abs(first_non_zero - peaks[i]) <= 15:
+					continue
 			if len(z_peak) >= 2 and peaks[i] > z_peak[-2] and properties['prominences'][i] < 5:
 				continue
 			elif len(z_peak) >= 1 and peaks[i] > z_peak[-1] and properties['prominences'][i] < 10:

@@ -5,6 +5,26 @@ from scipy.signal import find_peaks
 import csv
 import os
 
+def find_vel(i,x_list,y_list):
+	if i < 1 or i >= len(x_list):
+		return 0
+	if (x_list[i-1] == 0 and y_list[i-1] == 0) or (x_list[i] == 0 and y_list[i] == 0):
+		return 0
+	return (abs(x_list[i] - x_list[i-1])**2 + abs(y_list[i] - y_list[i-1])**2)**0.5
+
+def average_vel(i,x_list,y_list):
+	vel_sum = 0
+	n = 0
+	for m in range(i-2,i+3):
+		vel = find_vel(m,x_list,y_list)
+		if vel == 0:
+			continue
+		vel_sum += vel
+		n += 1
+	if n == 0:
+		return 0
+	return vel_sum/n
+
 def find_acc(i,x_list,y_list):
 	if i < 2 or i >= len(x_list):
 		return 0,0
@@ -12,13 +32,13 @@ def find_acc(i,x_list,y_list):
 		return 0,0
 	return x_list[i] - 2*x_list[i-1] + x_list[i-2],y_list[i] - 2*y_list[i-1] + y_list[i-2]
 
-def average(i,x_list,y_list):
+def average_acc(i,x_list,y_list):
 	ax_sum = 0
 	ay_sum = 0
 	n = 0
 	for m in range(i-2,i+3):
 		ax_temp,ay_temp = find_acc(m,x_list,y_list)
-		if (m < 0 or m > len(x_list)-3) or (ax_temp == 0 and ay_temp == 0):
+		if ax_temp == 0 and ay_temp == 0:
 			continue
 		ax_sum += abs(ax_temp)
 		ay_sum += abs(ay_temp)
@@ -92,6 +112,10 @@ while set_num <= 3:
 		x = df['X'].tolist()
 		y = df['Y'].tolist()
 
+		avg_vel = []
+		for i in range(len(y)):
+			avg_vel.append(find_vel(i,x,y))
+
 		x_denoise_line = []
 		y_denoise_line = []
 		z_denoise_line = []
@@ -146,7 +170,7 @@ while set_num <= 3:
 		avg_ay = []
 		avg_z = []
 		for i in range(len(x)):
-			avg_ax_temp,avg_ay_temp = average(i,x,y)
+			avg_ax_temp,avg_ay_temp = average_acc(i,x,y)
 			avg_ax.append(avg_ax_temp)
 			avg_ay.append(avg_ay_temp)
 			avg_z.append(i)
@@ -162,7 +186,7 @@ while set_num <= 3:
 		result_avg_z = []
 		for i in range(len(p)):
 			if p[i] == 1:
-				avg_ax_temp,avg_ay_temp = average(i,x,y)
+				avg_ax_temp,avg_ay_temp = average_acc(i,x,y)
 				result_avg_ax.append(avg_ax_temp)
 				result_avg_ay.append(avg_ay_temp)
 				result_avg_z.append(i)
@@ -174,7 +198,7 @@ while set_num <= 3:
 		predict_avg_z = []
 		for i in range(len(p)):
 			if p[i] == 1:
-				avg_ax_temp,avg_ay_temp = average(i,x,y)
+				avg_ax_temp,avg_ay_temp = average_acc(i,x,y)
 				predict_avg_ax.append(avg_ax_temp)
 				predict_avg_ay.append(avg_ay_temp)
 				predict_avg_z.append(i)
@@ -219,6 +243,7 @@ while set_num <= 3:
 
 		plt.subplot(2,2,1)
 		plt.plot(z_denoise_line,y_denoise_line,'-')
+		plt.plot(np.arange(len(avg_vel)),avg_vel,'--')
 		plt.plot(result_z,result_y,'ro')
 		plt.plot(predict_z,predict_y,'bs')
 		plt.plot(z_peak,y_peak,'g^')
