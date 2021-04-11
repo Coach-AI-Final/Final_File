@@ -56,6 +56,22 @@ while set_num <= 3:
 		x = df['X'].tolist()
 		y = df['Y'].tolist()
 
+		x_denoise = []
+		y_denoise = []
+		z_denoise = []
+		for i in range(len(y)):
+			if x[i] != 0 or y[i] != 0:
+				x_denoise.append(x[i])
+				y_denoise.append(y[i])
+				z_denoise.append(i)
+
+		y_peaks,y_property = find_peaks(y_denoise,prominence=8,distance=5)
+		y_peak = []
+		z_peak = []
+		for i in range(len(y_peaks)):
+			y_peak.append(y_denoise[y_peaks[i]])
+			z_peak.append(z_denoise[y_peaks[i]])
+
 
 		avg_ax = []
 		avg_ay = []
@@ -66,19 +82,26 @@ while set_num <= 3:
 			avg_ay.append(avg_ay_temp)
 			avg_z.append(i)
 
-		peaks, properties = find_peaks(avg_ay, prominence=3, distance=10, height=3)
-
+		# peaks, properties = find_peaks(avg_ay, prominence=3, distance=8, height=3)
+		peaks, properties = find_peaks(avg_ay, prominence=3, distance=8)
 		peak_y = []
 		peak_x = []
-		for peak in peaks:
-			if peak == peaks[len(peaks)-1]:
-				break
-			avg_ax_temp,avg_ay_temp = average(peak,x,y)
-			peak_y.append(avg_ay_temp)
-			if peak >= 3:
-				peak_x.append(peak - 3)
+		for i in range(len(peaks)):
+			# if i == len(peaks)-1 and len(peaks) > 1:
+			# 	break
+			if len(z_peak) >= 2 and peaks[i] > z_peak[-2] and properties['prominences'][i] < 5:
+				continue
+			elif len(z_peak) >= 1 and peaks[i] > z_peak[-1] and properties['prominences'][i] < 10:
+				continue
+			adjust = z_peak[np.abs(z_peak-peaks[i]).argmin()]
+			if abs(adjust - peaks[i]) <= 5:
+				avg_ax_temp,avg_ay_temp = average(adjust,x,y)
+				peak_y.append(avg_ay_temp)
+				peak_x.append(adjust)
 			else:
-				peak_x.append(0)
+				avg_ax_temp,avg_ay_temp = average(peaks[i] - 3,x,y)
+				peak_y.append(avg_ay_temp)
+				peak_x.append(peaks[i] - 3)
 
 		with open(infile, newline='') as csvfile:
 			reader = csv.reader(csvfile)
