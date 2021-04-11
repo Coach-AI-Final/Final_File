@@ -2,13 +2,17 @@ import csv
 import os
 import numpy as np
 
-ERROR_RANGE = 10
+ERROR_RANGE = 5
 
 confusion_matrix = np.array([[0,0],
                             [0,0]])
 error_sum = 0
 set_num = 1
 total_row = 0
+dir_path = input("Enter directory path:")
+if dir_path[-1] != "/":
+	dir_path += "/"
+
 while set_num <= 3:
 	score_A = 0
 	score_B = 0
@@ -22,8 +26,8 @@ while set_num <= 3:
 		else:
 			score_B = score_B + 1
 		rally_score = str(set_num)+"_"+(str(score_A)).zfill(2)+"_"+(str(score_B)).zfill(2)
-		infile_out = rally_score + "_out.csv"
-		infile_predict = rally_score + "_predict.csv"
+		infile_out = dir_path + rally_score + "_out.csv"
+		infile_predict = dir_path + rally_score + "_predict.csv"
 		if os.path.isfile(infile_out) == False or os.path.isfile(infile_predict) == False:
 			continue
 		with open(infile_out, newline='') as csv_out:

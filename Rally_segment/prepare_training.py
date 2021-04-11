@@ -3,6 +3,9 @@ import os
 import pandas as pd
 
 set_num = 1
+dir_path = input("Enter directory path:")
+if dir_path[-1] != "/":
+	dir_path += "/"
 
 while set_num <= 3:
 	score_A = 0
@@ -18,17 +21,17 @@ while set_num <= 3:
 		else:
 			score_B = score_B + 1
 		rally_score = str(set_num)+"_"+(str(score_A)).zfill(2)+"_"+(str(score_B)).zfill(2)
-		infile = rally_score + ".csv"
+		infile = dir_path + rally_score + ".csv"
 		if os.path.isfile(infile) == False:
 			continue
-		with open("RallySeg.csv", newline='') as index_file:
+		with open(dir_path + "RallySeg.csv", newline='') as index_file:
 			rows = csv.DictReader(index_file)
 			for row in rows:
 				if row['Score'] == rally_score:
 					start_frame = int(row['Start'])
 					break
 
-		with open("set"+str(set_num)+".csv", newline='',encoding='utf-8') as turning_file:
+		with open(dir_path + "set"+str(set_num)+".csv", newline='',encoding='utf-8') as turning_file:
 			rows = csv.DictReader(turning_file)
 			for row in rows:
 				if int(row['roundscore_A'])==score_A and int(row['roundscore_B'])==score_B:

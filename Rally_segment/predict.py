@@ -3,6 +3,9 @@ import csv
 import os
 
 set_num = 1
+dir_path = input("Enter directory path:")
+if dir_path[-1] != "/":
+	dir_path += "/"
 
 while set_num <= 3:
 	score_A = 0
@@ -15,8 +18,8 @@ while set_num <= 3:
 		else:
 			score_B = score_B + 1
 		rally_score = str(set_num)+"_"+(str(score_A)).zfill(2)+"_"+(str(score_B)).zfill(2)
-		infile = rally_score + ".csv"
-		denoise_file = rally_score + "_denoise.csv"
+		infile = dir_path + rally_score + "_denoise.csv"
+		denoise_file = dir_path + rally_score + "_denoise.csv"
 		if os.path.isfile(infile) == False or os.path.isfile(denoise_file) == False:
 			continue
 		#loads the file and calculate velocity
@@ -33,31 +36,31 @@ while set_num <= 3:
 			for row in rows:
 				data_list.append([])
 				if first:
-					if int(row['X']) != 0 or int(row['Y']) != 0:
+					if float(row['X']) != 0.0 or float(row['Y']) != 0.0:
 						Frame = int(row['Frame'])
-						x = int(row['X'])
-						y = int(row['Y'])
+						x = float(row['X'])
+						y = float(row['Y'])
 						first = False
 					data_list[-1].append(int(row['Frame']))
 					data_list[-1].append(int(row['Visibility']))
-					data_list[-1].append(int(row['X']))
-					data_list[-1].append(int(row['Y']))
+					data_list[-1].append(float(row['X']))
+					data_list[-1].append(float(row['Y']))
 					data_list[-1].append(0)#Has no velocity value, set to 0
 					data_list[-1].append(0)#Has no velocity value, set to 0
 				else:
 					data_list[-1].append(int(row['Frame']))
 					data_list[-1].append(int(row['Visibility']))
-					data_list[-1].append(int(row['X']))
-					data_list[-1].append(int(row['Y']))
-					if int(row['X']) == 0 and int(row['Y']) == 0:
+					data_list[-1].append(float(row['X']))
+					data_list[-1].append(float(row['Y']))
+					if float(row['X']) == 0 and float(row['Y']) == 0:
 						data_list[-1].append(0)
 						data_list[-1].append(0)
 					else:
-						data_list[-1].append(round((int(row['X'])-x)/((int(row['Frame'])-Frame)),3))
-						data_list[-1].append(round((int(row['Y'])-y)/((int(row['Frame'])-Frame)),3))
+						data_list[-1].append(round((float(row['X'])-x)/((int(row['Frame'])-Frame)),3))
+						data_list[-1].append(round((float(row['Y'])-y)/((int(row['Frame'])-Frame)),3))
 						Frame = int(row['Frame'])
-						x = int(row['X'])
-						y = int(row['Y'])
+						x = float(row['X'])
+						y = float(row['Y'])
 
 		#calculate acceleration
 		if '.csv' in infile:
@@ -201,10 +204,10 @@ while set_num <= 3:
 			out_data[-1].append(data_list[i][3])
 			out_data[-1].append(data_list[i][8])
 
-		with open(infile+'_predict.csv','w',newline='') as predict:
+		with open(dir_path+rally_score+'_predict.csv','w',newline='') as predict:
 			writer = csv.writer(predict)
 			writer.writerows(out_data)
-			print('Save output file as '+infile+'_predict.csv')
+			print('Save output file as '+rally_score+'_predict.csv')
 	
 	set_num = set_num + 1
 			

@@ -1,7 +1,12 @@
 import pandas as pd
 import numpy as np
 import os
+
 set_num = 1
+dir_path = input("Enter directory path:")
+if dir_path[-1] != "/":
+	dir_path += "/"
+
 while set_num <= 3:
 	score_A = 0
 	score_B = 0
@@ -12,7 +17,7 @@ while set_num <= 3:
 			score_B = 0
 		else:
 			score_B = score_B + 1
-		path = str(set_num)+"_"+(str(score_A)).zfill(2)+"_"+(str(score_B)).zfill(2)+".csv"
+		path = dir_path + str(set_num)+"_"+(str(score_A)).zfill(2)+"_"+(str(score_B)).zfill(2)+".csv"
 		if os.path.isfile(path) == False:
 			continue
 		df = pd.read_csv(path)
@@ -401,7 +406,7 @@ while set_num <= 3:
 		mis2_X = []
 		mis2_y = []
 		for i in range(len(mis2)):
-			if i == 0 or i == 1 or i ==2 or i == len(mis2)-1 or i == len(mis2)-2 or i == len(mis2)-3:
+			if i <= 2 or i >= len(mis2)-4:
 				mis2_X.append(mis1_X[i])
 				mis2_y.append(mis1_y[i])        
 			
@@ -436,7 +441,7 @@ while set_num <= 3:
 		mis3_X = []
 		mis3_y = []
 		for i in range(len(mis3)):
-			if i == 0 or i == 1 or i ==2 or i ==len(mis3) or i ==len(mis3)-1 or i ==len(mis3)-2:
+			if i <= 2 or i >= len(mis3)-5:
 				mis3_X.append(mis2_X[i])
 				mis3_y.append(mis2_y[i])        
 		
@@ -474,7 +479,7 @@ while set_num <= 3:
 		mis4_X = []
 		mis4_y = []
 		for i in range(len(mis4)):
-			if i == 0 or i == 1 or i ==2 or i ==len(mis4)-1 or i ==len(mis4)-2 or i ==len(mis4)-3:
+			if i <= 2 or i ==len(mis4)-1 or i ==len(mis4)-2 or i ==len(mis4)-3:
 				mis4_X.append(mis3_X[i])
 				mis4_y.append(mis3_y[i])           
 			elif mis4[i-3:i+1] == [0,0,0,0]:

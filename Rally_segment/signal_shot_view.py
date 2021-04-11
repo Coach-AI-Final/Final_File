@@ -8,7 +8,7 @@ import math
 from scipy.signal import find_peaks
 
 
-filename = '1_01_01_denoise.csv'
+filename = '1_05_06_denoise.csv'
 list1=[]
 frames=[]
 realx=[]
