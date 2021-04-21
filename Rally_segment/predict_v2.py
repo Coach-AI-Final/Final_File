@@ -114,11 +114,15 @@ while set_num <= 3:
 		peak_x = []
 		for i in range(len(peaks)):
 			if i == 0:
-				avg_ax_temp,avg_ay_temp = average(first_non_zero,x,y)
-				peak_y.append(avg_ay_temp)
-				peak_x.append(first_non_zero)
+				# avg_ax_temp,avg_ay_temp = average(first_non_zero,x,y)
+				# peak_y.append(avg_ay_temp)
+				# peak_x.append(first_non_zero)
+				# if abs(first_non_zero - peaks[i]) <= 15:
+				# 	continue
+
 				if abs(first_non_zero - peaks[i]) <= 15:
 					continue
+
 			if len(z_peak) >= 2 and peaks[i] > z_peak[-2] and properties['prominences'][i] < 5:
 				continue
 			elif len(z_peak) >= 1 and peaks[i] > z_peak[-1] and properties['prominences'][i] < 10:
