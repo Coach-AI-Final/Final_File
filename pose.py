@@ -59,7 +59,41 @@ def closest(lst, K):
     for i in range(len(lst)):
         if K < lst[i]:
             return lst[i-1]
-    
+
+def overlay_image_alpha(img, img_overlay, x, y, alpha_mask):
+
+    # Image ranges
+    y1, y2 = max(0, y), min(img.shape[0], y + img_overlay.shape[0])
+    x1, x2 = max(0, x), min(img.shape[1], x + img_overlay.shape[1])
+
+    # Overlay ranges
+    y1o, y2o = max(0, -y), min(img_overlay.shape[0], img.shape[0] - y)
+    x1o, x2o = max(0, -x), min(img_overlay.shape[1], img.shape[1] - x)
+
+    # Exit if nothing to do
+    if y1 >= y2 or x1 >= x2 or y1o >= y2o or x1o >= x2o:
+        return
+
+    # Blend overlay within the determined ranges
+    img_crop = img[y1:y2, x1:x2]
+    img_overlay_crop = img_overlay[y1o:y2o, x1o:x2o]
+    alpha = alpha_mask[y1o:y2o, x1o:x2o, np.newaxis]
+    alpha_inv = 1.0 - alpha
+
+    img_crop[:] = alpha * img_overlay_crop + alpha_inv * img_crop
+
+
+def overlay_img(dict, frame_num):
+
+    if str(dict[frame_num]) == "clear":
+        img = cv2.imread('./temp/clear.png')
+        img = cv2.resize(img, (70,70))
+            
+    if str(dict[frame_num]) == "smash":
+        img = cv2.imread('./temp/smash.png')
+        img = cv2.resize(img, (70,70))
+
+    return img
 
 
 if __name__ == '__main__':
@@ -73,6 +107,9 @@ if __name__ == '__main__':
                         help='for debug purpose, if enabled, speed for inference is dropped.')
     parser.add_argument('--showBG', type=str, default='', help='Use it with any non-empty string to show skeleton only.')
     args = parser.parse_args()
+
+    
+
 
     #logger.debug('initialization %s : %s' %(args.model, get_graph_path(args.model)))
     w, h = model_wh(args.resolution)
@@ -120,7 +157,9 @@ if __name__ == '__main__':
         record = []
         frame_list = []
         for row in rows:
-            dict[int(row[0])] = str(row[1])
+            if (row[0]=="frame"):
+                continue
+            dict[int(row[0])] = str(row[2])
             frame_list.append(int(row[0]))
             
 
@@ -129,16 +168,19 @@ if __name__ == '__main__':
     pbar = ProgressBar().start()
     
 
+
+
     while cap.isOpened():
         
         frame_num += 1
-        
-        #print("now frame : ",frame_num, "total frame : ",length," ")
-        
         pbar.update(int((frame_num / length) * 100))
 
+
+
+        # video image
         ret_val, image = cap.read()
         ret_val2, image2 = cap2.read()
+        
         
         
         if(image is None):
@@ -156,29 +198,31 @@ if __name__ == '__main__':
         else:
             image = np.zeros(image.shape, dtype=np.uint8) 
             image = TfPoseEstimator.draw_humans(image, image2, humans, frame_num, imgcopy=False, skeletonornot=True)
-        
-        #cv2.putText(image, "FPS: %f" % (1.0 / (time.time() - fps_time)),
-        #            (10, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        
-        #cv2.putText(image, "Frame number: %f" % (frame_num),
-        #            (10, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+
         
         if frame_num in dict.keys():
 
             cv2.putText(image, "Ball: %s" % (str(dict[frame_num])),
                     (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            img = overlay_img(dict, frame_num)
+            
+        
         else : 
             if closest(frame_list,frame_num) is None:
                 pass
             else:
                 cv2.putText(image, "Ball: %s" % (str(dict[closest(frame_list,frame_num)])),
-                    (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)            
+                    (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)   
+                img = overlay_img(dict, closest(frame_list,frame_num))         
+
+        # overlay the image
+        alpha_mask = img[:, :, 2] / 255.0
+        overlay_image_alpha(image,img,0,0,alpha_mask)
 
         if args.write_video:
             closest_value = abs (frame_num - take_closest(frame_list,frame_num))
             #print(closest_value)
             if closest_value <=3 :
-                #print("add")
                 for i in range(5):
                     out.write(image)
             else:
