@@ -156,6 +156,15 @@ Result After Bitwise And :
 
 ## HOW TO RUN THE CODE
 
+### Environment 
+- python3
+- tensorflow 1.4.1+ (python 3.6 above does not support!!!)
+- opencv3, protobuf, python3-tk
+- slidingwindow
+  - https://github.com/adamrehn/slidingwindow
+  - I copied from the above git repo to modify few things.
+
+
 ### Simply type in command line
 ```
 python final.py
