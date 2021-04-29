@@ -154,11 +154,6 @@ Result After Bitwise And :
 
 ![](https://i.imgur.com/u5ZV8bG.png)
 
-### Python usage
-```
-python3 main.py --input video.mp4
-```
-
 ## HOW TO RUN THE CODE
 
 ### Simply type in command line
