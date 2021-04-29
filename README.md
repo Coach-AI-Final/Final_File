@@ -159,9 +159,9 @@ Result After Bitwise And :
 python3 main.py --input video.mp4
 ```
 
-## INTERGRATION
+## HOW TO RUN THE CODE
 
-### Python usage
+### Simply type in command line
 ```
 python final.py
 ```
