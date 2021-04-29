@@ -154,9 +154,19 @@ Result After Bitwise And :
 
 ![](https://i.imgur.com/u5ZV8bG.png)
 
+## Tkinter 
+Tkinter is a Python binding to the Tk GUI toolkit. It is the standard Python interface to the Tk GUI toolkit, and is Python's de facto standard GUI. Tkinter is included with standard Linux, Microsoft Windows and Mac OS X installs of Python.
+The name Tkinter comes from Tk interface. Tkinter was written by Fredrik Lundh.
+Tkinter is free software released under a Python license.
+
+[intro1](https://www.rs-online.com/designspark/python-tkinter-cn#_Toc61529922) <br>
+[intro2](https://tkdocs.com/tutorial/firstexample.html#design) <br>
+
+
 ## HOW TO RUN THE CODE
 
 ### Environment 
+- linux env
 - python3
 - tensorflow 1.4.1+ (python 3.6 above does not support!!!)
 - opencv3, protobuf, python3-tk
