@@ -11,7 +11,7 @@
 - 2021 - 03 - 18  Intergrate Ball_predict , rally_segment, pose_estimation into final.py
 - 2021 - 04 - 01 Update slow motion when hitting the ball and clean the integration
 - 2021 - 04 - 20 Update Basic GUI 
-
+- 2021 - 04 - 29 More integration works and Update GUI 
 
 ## TF_POSE_ESTIMATION 
 openpose is reference by https://github.com/ildoonet/tf-pose-estimation <br>
