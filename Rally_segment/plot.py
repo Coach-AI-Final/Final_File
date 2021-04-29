@@ -246,7 +246,7 @@ while set_num <= 3:
 		plt.plot(np.arange(len(avg_vel)),avg_vel,'--')
 		plt.plot(result_z,result_y,'ro')
 		plt.plot(predict_z,predict_y,'bs')
-		plt.plot(z_peak,y_peak,'g^')
+		# plt.plot(z_peak,y_peak,'g^')
 		for i in result_z:
 			plt.axvline(x=i, ymin=0, ymax=1, color='bisque', linestyle='--')
 		plt.title("Y versus Frame with denoise")
