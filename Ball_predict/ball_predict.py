@@ -19,418 +19,535 @@ from joblib import dump, load
 from PIL import Image, ImageDraw, ImageFont
 import joblib
 import os
+import matplotlib.pyplot as plt
 
+set_num = 1
+while set_num <= 3:
+    score_A = 0
+    score_B = 0
+    while score_A < 22:
+        interpolate_table = []
+        if score_B == 21:
+            score_A = score_A + 1
+            score_B = 0
+        else:
+            score_B = score_B + 1
+        infile = str(set_num)+"_"+(str(score_A)).zfill(2) + \
+            "_"+(str(score_B)).zfill(2)+"_remove.csv"
+        if os.path.isfile(infile) == False:
+            continue
 
-def ball_predict(*args):
+        address = ''
 
-    set_num = 1
-    while set_num <= 3:
-        score_A = 0
-        score_B = 0
-        while score_A < 22:
-            interpolate_table = []
-            if score_B == 21:
-                score_A = score_A + 1
-                score_B = 0
-            else:
-                score_B = score_B + 1
-            infile = str(set_num)+"_"+(str(score_A)).zfill(2) + \
-                "_"+(str(score_B)).zfill(2)+"_predict.csv"
-            if os.path.isfile(infile) == False:
-                continue
+        def save_image(image, addr):
 
-            im_src = cv2.imread('court1.jpg')
+            address = addr + '.jpg'
 
-            pts_src = np.array([[449, 256], [817, 255], [283, 646], [977, 642]])
+            cv2.imwrite(address, image)
 
-            im_dst = cv2.imread('court2.jpg')
+        videoCapture = cv2.VideoCapture(infile[:-11] + ".mp4")
 
-            pts_dst = np.array([[1238, 141], [1238, 640], [188, 141], [188, 640]])
+        success, frame = videoCapture.read()
 
-            homo, status = cv2.findHomography(pts_src, pts_dst)
+        save_image(frame, './court1')
 
-            data_list = []
+        im_src = cv2.imread('court1.jpg')
 
-            index_range = []
+        pts_src = np.array(
+            [[449, 256], [817, 255], [283, 646], [977, 642]])
 
-            ball_location_x = []
+        im_dst = cv2.imread('court2.jpg')
 
-            ball_location_y = []
+        pts_dst = np.array(
+            [[1238, 141], [1238, 640], [188, 141], [188, 640]])
 
-            ball_interpolate_x = []
+        homo, status = cv2.findHomography(pts_src, pts_dst)
 
-            ball_interpolate_y = []
+        data_list = []
 
-            frame = []
+        index_range = []
+
+        ball_location_x = []
+
+        ball_location_y = []
+
+        ball_interpolate_x = []
+
+        ball_interpolate_y = []
+
+        frame = []
+
+        first = 1
+
+        player = []
+
+        with open(infile, newline='') as csvfile:
+
+            rows = csv.DictReader(csvfile)
+
+            j, i = 0, 1
 
             first = 1
 
-            with open(infile, newline='') as csvfile:
+            shortest = 0
 
-                rows = csv.DictReader(csvfile)
+            lastx = 0
 
-                j, i = 0, 1
+            lasty = 0
 
-                first = 1
+            lastindex = 0
 
-                shortest = 0
+            last_turning = 0
 
-                lastx = 0
+            data_list.append([])
 
-                lasty = 0
+            data_list[0].append('index')
 
-                lastindex = 0
+            data_list[0].append('player')
 
-                data_list.append([])
+            data_list[0].append('parabola')
 
-                data_list[0].append('index')
+            data_list[0].append('ymin')
 
-                data_list[0].append('player')
+            data_list[0].append('V')
 
-                data_list[0].append('parabola')
+            hit_odd = []
 
-                data_list[0].append('ymin')
+            hit_even = []
 
-                data_list[0].append('V')
+            num = 1
 
-                for row in rows:
+            for row in rows:
 
-                    if j == 0:
+                if j == 0:
 
-                        data_list.append([])
+                    last_turning = 0
 
-                        index = int(row['index'])
+                    data_list.append([])
 
-                        data_list[i].append(index)
+                    index = int(row['Frame'])
 
-                        ball_location_x.append(float(row['X']))
+                    data_list[i].append(index)
 
-                        ball_location_y.append(float(row['Y']))
+                    visibility = int(row['Visibility'])
 
-                        if first:
+                    X = float(row['X'])
 
-                            frame.append(index)
+                    ball_location_x.append(X)
 
-                            if ball_location_y[0] <= 300:
+                    Y = float(row['Y'])
 
-                                data_list[i].append('B')
+                    ball_location_y.append(Y)
 
-                                player = 'B'
+                    if first:
 
-                            else:
+                        frame.append(index)
 
-                                data_list[i].append('A')
+                        # if ball_location_y[0] <= 300:
 
-                                player = 'A'
+                        #     data_list[i].append('B')
 
-                            index_range.append(index)
+                        #     player = 'B'
 
-                            hit_x = ball_location_x[0]
+                        # else:
 
-                            hit_y = ball_location_y[0]
+                        #     data_list[i].append('A')
 
-                            first = 0
+                        #     player = 'A'
 
-                        else:
+                        hit_odd.append(Y)
 
-                            if player == 'A':
-
-                                data_list[i].append('B')
-
-                                player = 'B'
-
-                            else:
-
-                                data_list[i].append('A')
-
-                                player = 'A'
-
-                            index_range.append(lastindex)
-
-                            hit_x = lastx
-
-                            hit_y = lasty
-
-                        hit_array = np.array([[hit_x], [hit_y], [1]])
-
-                        hit_homo = np.dot(homo, hit_array)
-
-                        hit_x1 = float(hit_homo[0])
-
-                        hit_y1 = float(hit_homo[1])
-
-                        vx = float(row['Vx'])
-
-                        vy = float(row['Vy'])
-
-                        ax = float(row['ax'])
-
-                        ay = float(row['ay'])
-
-                        turning = int(row['turning_point'])
-
-                        # if turning == 1:
-
-                        #     frame.append(index)
-
-                        #     data_list[i].append('0')
-
-                        #     data_list[i].append(min(lasty, ball_location_y[0]))
-
-                        #     index = index - index_range[0]
-
-                        #     landing_x = ball_location_x[-1]
-
-                        #     landing_y = ball_location_y[-1]
-
-                        #     landing_array = np.array(
-                        #         [[landing_x], [landing_y], [1]])
-
-                        #     landing_homo = np.dot(homo, landing_array)
-
-                        #     landing_x1 = float(landing_homo[0])
-
-                        #     landing_y1 = float(landing_homo[1])
-
-                        #     a = landing_x1 - hit_x1
-
-                        #     b = landing_y1 - hit_y1
-
-                        #     v = round(math.sqrt(a * a + b * b) / (index * 0.03), 3)
-
-                        #     data_list[i].append(v)
-
-                        #     index_range.clear()
-
-                        #     ball_location_x.clear()
-
-                        #     ball_interpolate_x.clear()
-
-                        #     ball_location_y.clear()
-
-                        #     ball_interpolate_y.clear()
-
-                        #     j = 0
-
-                        #     i = i + 1
-
-                    else:
-
-                        index = int(row['index'])
+                        num += 1
 
                         index_range.append(index)
 
-                        ball_location_x.append(float(row['X']))
+                        hit_x = ball_location_x[0]
 
-                        ball_location_y.append(float(row['Y']))
+                        hit_y = ball_location_y[0]
 
-                        vx = float(row['Vx'])
+                        first = 0
 
-                        vy = float(row['Vy'])
+                    else:
 
-                        ax = float(row['ax'])
+                        index_range.append(lastindex)
 
-                        ay = float(row['ay'])
+                        hit_x = lastx
 
-                        turning = int(row['turning_point'])
+                        hit_y = lasty
 
-                        if turning == 1:
+                    hit_array = np.array([[hit_x], [hit_y], [1]])
 
-                            frame.append(index)
+                    hit_homo = np.dot(homo, hit_array)
 
-                            index = index_range[-1] - index_range[0]
+                    hit_x1 = float(hit_homo[0])
 
-                            j = 0
+                    hit_y1 = float(hit_homo[1])
 
-                            total = len(ball_location_x)
-
-                            lastx = ball_location_x[-1]
-
-                            lasty = ball_location_y[-1]
-
-                            lastindex = index_range[-1]
-
-                            for l in range(total):
-
-                                x = (l / (total-1)) * ball_location_x[total-1] + (
-                                    (total-1-l)/(total-1)) * ball_location_x[0]
-
-                                y = (l / (total-1)) * ball_location_y[total-1] + (
-                                    (total-1-l)/(total-1)) * ball_location_y[0]
-
-                                ball_interpolate_x.append(x)
-
-                                ball_interpolate_y.append(y)
-
-                            for k in range(total):
-
-                                h = (ball_interpolate_x[k] - ball_location_x[k]) ** 2 + \
-                                    (ball_interpolate_y[k] -
-                                    ball_location_y[k]) ** 2
-
-                                shortest = shortest + h
-
-                            if (total-2) <= 0:
-
-                                num = 1
-
-                            else:
-
-                                num = total - 2
-
-                            shortest = shortest / num
-
-                            data_list[i].append(round(shortest, 3))
-
-                            data_list[i].append(min(ball_location_y))
-
-                            landing_x = ball_location_x[-1]
-
-                            landing_y = ball_location_y[-1]
-
-                            landing_array = np.array(
-                                [[landing_x], [landing_y], [1]])
-
-                            landing_homo = np.dot(homo, landing_array)
-
-                            landing_x1 = float(landing_homo[0])
-
-                            landing_y1 = float(landing_homo[1])
-
-                            a = landing_x1 - hit_x1
-
-                            b = landing_y1 - hit_y1
-
-                            v = round(math.sqrt(a * a + b * b) / (index * 0.03), 3)
-
-                            data_list[i].append(v)
-
-                            shortest = 0
-
-                            index_range.clear()
-
-                            ball_location_x.clear()
-
-                            ball_interpolate_x.clear()
-
-                            ball_location_y.clear()
-
-                            ball_interpolate_y.clear()
-
-                            i = i + 1
-
-                    if turning == 0:
-
-                        j = j + 1
-
-                total = len(ball_location_x)
-
-                for l in range(total):
-
-                    x = (l / (total-1)) * ball_location_x[total-1] + \
-                        ((total-1-l)/(total-1)) * ball_location_x[0]
-
-                    y = (l / (total-1)) * ball_location_y[total-1] + \
-                        ((total-1-l)/(total-1)) * ball_location_y[0]
-
-                    ball_interpolate_x.append(x)
-
-                    ball_interpolate_y.append(y)
-
-                for k in range(total):
-
-                    h = (ball_interpolate_x[k] - ball_location_x[k]) ** 2 + \
-                        (ball_interpolate_y[k] - ball_location_y[k]) ** 2
-
-                    shortest = shortest + h
-
-                shortest = shortest / (total-2)
-
-                data_list[i].append(round(shortest, 3))
-
-                data_list[i].append(min(ball_location_y))
-
-                index = index_range[-1] - index_range[0]
-
-                landing_x = ball_location_x[-1]
-
-                landing_y = ball_location_y[-1]
-
-                landing_array = np.array([[landing_x], [landing_y], [1]])
-
-                landing_homo = np.dot(h, landing_array)
-
-                landing_x1 = float(landing_homo[0])
-
-                landing_y1 = float(landing_homo[1])
-
-                a = landing_x1 - hit_x1
-
-                b = landing_y1 - hit_y1
-
-                v = round(math.sqrt(a * a + b * b) / (index * 0.03), 3)
-
-                data_list[i].append(v)
-
-            infile = infile[0:infile.find('_predict')]
-
-            with open(infile + '_all.csv', 'w', newline='') as csvout:
-
-                writer = csv.writer(csvout)
-
-                writer.writerows(data_list)
-
-                print('Save output file as ' + infile + '_all.csv')
-
-            badminton_data = pd.read_csv(infile + '_all.csv')
-
-            badminton_df = pd.DataFrame(data=badminton_data)
-
-            badminton_df = badminton_df.drop(columns=['index'])
-
-            badminton_df = pd.get_dummies(badminton_df)
-
-            model = load("./Ball_predict/joblib_RL_Model.pkl")
-
-            y_pred = model.predict(badminton_df)
-
-            for i in range(len(y_pred)):
-
-                if y_pred[i] == '高球':
-
-                    y_pred[i] = 'clear'
-
-                elif y_pred[i] == '小球':
-
-                    y_pred[i] = 'short'
-
-                elif y_pred[i] == '殺球':
-
-                    y_pred[i] = 'smash'
+                    turning = int(row['turning_point'])
 
                 else:
 
-                    y_pred[i] = 'drive'
+                    index = int(row['Frame'])
 
-            y_pred = list(y_pred)
+                    index_range.append(index)
 
-            data_list = []
+                    visibility = int(row['Visibility'])
 
-            for i in range(len(y_pred)):
+                    X = float(row['X'])
 
-                data_list.append([])
+                    ball_location_x.append(X)
 
-                data_list[i].append(frame[i])
+                    Y = float(row['Y'])
 
-                data_list[i].append(y_pred[i])
+                    ball_location_y.append(Y)
 
-            with open('./Ball_predict/' + infile + '_out.csv', 'w') as csvout:
+                    turning = int(row['turning_point'])
 
-                writer = csv.writer(csvout)
+                    if turning == 1:
 
-                writer.writerows(data_list)
+                        last_turning = 1
 
-                print('Save output file as ./Ball_predict/' + infile + '_out.csv')
+                        frame.append(index)
 
-        set_num = set_num + 1
+                        index = index_range[-1] - index_range[0]
 
+                        j = 0
+
+                        total = len(ball_location_x)
+
+                        lastx = ball_location_x[-1]
+
+                        lasty = ball_location_y[-1]
+
+                        lastindex = index_range[-1]
+
+                        if num % 2 == 0:
+
+                            hit_even.append(Y)
+
+                            num += 1
+
+                        else:
+
+                            hit_odd.append(Y)
+
+                            num += 1
+
+                        for l in range(total):
+
+                            x = (l / (total-1)) * ball_location_x[total-1] + (
+                                (total-1-l)/(total-1)) * ball_location_x[0]
+
+                            y = (l / (total-1)) * ball_location_y[total-1] + (
+                                (total-1-l)/(total-1)) * ball_location_y[0]
+
+                            ball_interpolate_x.append(x)
+
+                            ball_interpolate_y.append(y)
+
+                        for k in range(total):
+
+                            h = (ball_interpolate_x[k] - ball_location_x[k]) ** 2 + \
+                                (ball_interpolate_y[k] -
+                                    ball_location_y[k]) ** 2
+
+                            shortest = shortest + h
+
+                        if (total-2) <= 0:
+
+                            num = 1
+
+                        else:
+
+                            num = total - 2
+
+                        shortest = shortest / num
+
+                        data_list[i].append(round(shortest, 3))
+
+                        data_list[i].append(min(ball_location_y))
+
+                        landing_x = ball_location_x[-1]
+
+                        landing_y = ball_location_y[-1]
+
+                        landing_array = np.array(
+                            [[landing_x], [landing_y], [1]])
+
+                        landing_homo = np.dot(homo, landing_array)
+
+                        landing_x1 = float(landing_homo[0])
+
+                        landing_y1 = float(landing_homo[1])
+
+                        a = landing_x1 - hit_x1
+
+                        b = landing_y1 - hit_y1
+
+                        v = round(math.sqrt(a * a + b * b) /
+                                  (index * 0.03), 3)
+
+                        data_list[i].append(v)
+
+                        shortest = 0
+
+                        index_range.clear()
+
+                        ball_location_x.clear()
+
+                        ball_interpolate_x.clear()
+
+                        ball_location_y.clear()
+
+                        ball_interpolate_y.clear()
+
+                        i = i + 1
+
+                if turning == 0:
+
+                    j = j + 1
+
+            if last_turning == 0:
+
+                del data_list[-1]
+
+            odd_point = round((sum(hit_odd) / len(hit_odd)), 2)
+
+            even_point = round((sum(hit_even) / len(hit_even)), 2)
+
+            # print(odd_point)
+
+            # print(even_point)
+
+            if odd_point > even_point:
+
+                c = 1
+
+                for i in range(1, len(data_list)):
+
+                    if c % 2 == 1:
+
+                        data_list[i].insert(1, 'A')
+
+                        player.append('A')
+
+                    else:
+
+                        data_list[i].insert(1, 'B')
+
+                        player.append('B')
+
+                    c += 1
+
+            else:
+
+                c = 1
+
+                for i in range(1, len(data_list)):
+
+                    if c % 2 == 1:
+
+                        data_list[i].insert(1, 'B')
+
+                        player.append('B')
+
+                    else:
+
+                        data_list[i].insert(1, 'A')
+
+                        player.append('A')
+
+                    c += 1
+
+            # c = 1
+
+            # for i in range(len(data_list)):
+
+            #     if odd_point > even_point:
+
+            #         data_list[i].insert(1, 'A')
+
+            #         c += 1
+
+            #     else:
+
+            #         data_list[i].insert(1, 'B')
+
+            #         c += 1
+
+            #     if i != len(data_list) - 1:
+
+            #         hit_odd.pop(0)
+
+            #         temp = []
+
+            #         temp = hit_even
+
+            #         hit_even = hit_odd
+
+            #         hit_odd = temp
+
+            #         odd_point = round((sum(hit_odd) / len(hit_odd)), 2)
+
+            #         even_point = round((sum(hit_even) / len(hit_even)), 2)
+
+            # total = len(ball_location_x)
+
+            # for l in range(total):
+
+            #     x = (l / (total-1)) * ball_location_x[total-1] + \
+            #         ((total-1-l)/(total-1)) * ball_location_x[0]
+
+            #     y = (l / (total-1)) * ball_location_y[total-1] + \
+            #         ((total-1-l)/(total-1)) * ball_location_y[0]
+
+            #     ball_interpolate_x.append(x)
+
+            #     ball_interpolate_y.append(y)
+
+            # for k in range(total):
+
+            #     h = (ball_interpolate_x[k] - ball_location_x[k]) ** 2 + \
+            #         (ball_interpolate_y[k] - ball_location_y[k]) ** 2
+
+            #     shortest = shortest + h
+
+            # shortest = shortest / (total-2)
+
+            # data_list[i].append(round(shortest, 3))
+
+            # data_list[i].append(min(ball_location_y))
+
+            # index = index_range[-1] - index_range[0]
+
+            # landing_x = ball_location_x[-1]
+
+            # landing_y = ball_location_y[-1]
+
+            # landing_array = np.array([[landing_x], [landing_y], [1]])
+
+            # landing_homo = np.dot(h, landing_array)
+
+            # landing_x1 = float(landing_homo[0])
+
+            # landing_y1 = float(landing_homo[1])
+
+            # a = landing_x1 - hit_x1
+
+            # b = landing_y1 - hit_y1
+
+            # v = round(math.sqrt(a * a + b * b) / (index * 0.03), 3)
+
+            # data_list[i].append(v)
+
+        infile = infile[0:infile.find('_remove')]
+
+        with open(infile + '_all.csv', 'w', newline='') as csvout:
+
+            writer = csv.writer(csvout)
+
+            writer.writerows(data_list)
+
+            print('Save output file as ' + infile + '_all.csv')
+
+        badminton_data = pd.read_csv(infile + '_all.csv')
+
+        badminton_df = pd.DataFrame(data=badminton_data)
+
+        badminton_df = badminton_df.drop(columns=['index'])
+
+        badminton_df = pd.get_dummies(badminton_df)
+
+        model = load("joblib_RL_Model.pkl")
+
+        y_pred = model.predict(badminton_df)
+
+        for i in range(len(y_pred)):
+
+            if y_pred[i] == '高球':
+
+                y_pred[i] = 'clear'
+
+            elif y_pred[i] == '小球':
+
+                y_pred[i] = 'short'
+
+            elif y_pred[i] == '殺球':
+
+                y_pred[i] = 'smash'
+
+            else:
+
+                y_pred[i] = 'drive'
+
+        y_pred = list(y_pred)
+
+        data_list = []
+
+        data_list.append([])
+
+        data_list[0].append('frame')
+
+        data_list[0].append('player')
+
+        data_list[0].append('type')
+
+        for i in range(len(y_pred)):
+
+            data_list.append([])
+
+            data_list[i+1].append(frame[i])
+
+            data_list[i+1].append(player[i])
+
+            data_list[i+1].append(y_pred[i])
+
+        with open(infile + '_out.csv', 'w') as csvout:
+
+            writer = csv.writer(csvout)
+
+            writer.writerows(data_list)
+
+            print('Save output file as ' + infile + '_out.csv')
+
+        hit_data = pd.read_csv(infile + '_out.csv')
+
+        hit_A_data = hit_data.drop(hit_data[hit_data['player'] == "B"].index)
+
+        fig = plt.figure()
+
+        plt.title(infile + '_A')
+
+        plt.bar(hit_A_data.type.unique(),
+                hit_A_data.type.value_counts(),
+                width=0.5,
+                bottom=None,
+                align='center',
+                color=['lightsteelblue',
+                       'cornflowerblue',
+                       'royalblue',
+                       'midnightblue'])
+        plt.xticks(rotation='vertical')
+
+        fig.savefig(infile + '_A' + '.png')
+
+        hit_B_data = hit_data.drop(hit_data[hit_data['player'] == "A"].index)
+
+        fig = plt.figure()
+
+        plt.title(infile + '_B')
+
+        plt.bar(hit_B_data.type.unique(),
+                hit_B_data.type.value_counts(),
+                width=0.5,
+                bottom=None,
+                align='center',
+                color=['lightsteelblue',
+                       'cornflowerblue',
+                       'royalblue',
+                       'midnightblue'])
+        plt.xticks(rotation='vertical')
+
+        fig.savefig(infile + '_B' + '.png')
+
+    set_num = set_num + 1
