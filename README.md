@@ -1,5 +1,50 @@
 # Final_File ------ BADMINTON-POSE-RECOGNITION
 
+## HOW TO RUN THE CODE
+
+### USE DOCKER (NOT FINISHED YET)
+
+#### [Install xauth](https://www.youtube.com/watch?v=RDg6TRwiPtg)
+- xauth list to get the display cookie
+- xauth add + display cookie
+
+#### [Install x11docker and launch it](https://techviewleo.com/run-gui-applications-in-docker-using-x11docker/)
+
+For Ubuntu Host: 
+```
+sudo apt-get -y install xpra xserver-xephyr xinit xauth xclip x11-xserver-utils x11-utils
+xhost +
+sudo docker run --rm -ti --net=host -e DISPLAY=:0 image_name
+```
+
+#### Last, Compile parfprocess.i
+```
+cd /root/tf-openpose/tf_pose/pafprocess 
+swig -python -c++ pafprocess.i && python3 setup.py build_ext --inplace
+
+python3 final.py
+```
+
+### Or Install Environment by yourself
+- linux env
+- python3
+- tensorflow 1.4.1+ (python 3.6 above does not support!!!)
+- opencv3, protobuf, python3-tk
+- slidingwindow
+  - https://github.com/adamrehn/slidingwindow
+  - I copied from the above git repo to modify few things.
+
+### Simply type in command line
+```
+python final.py
+```
+
+## Demo 
+![image](https://user-images.githubusercontent.com/46586372/116519965-b36a8d00-a904-11eb-9caf-fad5e18e01c5.png)
+![image](https://user-images.githubusercontent.com/46586372/116520057-ce3d0180-a904-11eb-8fb5-fa1fc55d16e1.png)
+
+
+
 ## Updates
 - 2020 - 10  Add newrunvideo.py 
 - 2020 - 10  Output keypoints as csv files in estimator.py
@@ -164,48 +209,6 @@ Tkinter is free software released under a Python license.
 [intro2](https://tkdocs.com/tutorial/firstexample.html#design) <br>
 
 
-## HOW TO RUN THE CODE
-
-### USE DOCKER (NOT FINISHED YET)
-
-#### [Install xauth](https://www.youtube.com/watch?v=RDg6TRwiPtg)
-- xauth list to get the display cookie
-- xauth add + display cookie
-
-#### [Install x11docker and launch it](https://techviewleo.com/run-gui-applications-in-docker-using-x11docker/)
-
-For Ubuntu Host: 
-```
-sudo apt-get -y install xpra xserver-xephyr xinit xauth xclip x11-xserver-utils x11-utils
-xhost +
-sudo docker run --rm -ti --net=host -e DISPLAY=:0 image_name
-```
-
-#### Last, Compile parfprocess.i
-```
-cd /root/tf-openpose/tf_pose/pafprocess 
-swig -python -c++ pafprocess.i && python3 setup.py build_ext --inplace
-
-python3 final.py
-```
-
-### Or Install Environment by yourself
-- linux env
-- python3
-- tensorflow 1.4.1+ (python 3.6 above does not support!!!)
-- opencv3, protobuf, python3-tk
-- slidingwindow
-  - https://github.com/adamrehn/slidingwindow
-  - I copied from the above git repo to modify few things.
-
-### Simply type in command line
-```
-python final.py
-```
-
-## Demo 
-![image](https://user-images.githubusercontent.com/46586372/116519965-b36a8d00-a904-11eb-9caf-fad5e18e01c5.png)
-![image](https://user-images.githubusercontent.com/46586372/116520057-ce3d0180-a904-11eb-8fb5-fa1fc55d16e1.png)
 
 
 
