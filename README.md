@@ -124,25 +124,6 @@ $ cd models/graph/cmu
 $ bash download.sh
 ```
 
-### Python Usage
-
-#### Realtime Webcam
-
-```
-$ python run_webcam.py --model=mobilenet_thin --resize=432x368 --camera=0
-```
-
-Apply TensoRT 
-
-```
-$ python run_webcam.py --model=mobilenet_thin --resize=432x368 --camera=0 --tensorrt=True
-```
-
-#### run video
-```
-python3 newrunvideo.py --model=mobilenet_thin --video=./images/2.mp4 --write_video=./results.mp4
-```
-
 ## BACKGROUND SUBTRACTION
 
 Background subtraction (BS) is a common and widely used technique for generating a foreground mask (namely, a binary image containing the pixels belonging to moving objects in the scene) by using static cameras.<br>
@@ -189,7 +170,6 @@ while True:
     if keyboard == 'q' or keyboard == 27:
         break
 ```
-### Results
 
 Raw Data :
 
