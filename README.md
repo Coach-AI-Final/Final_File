@@ -9,20 +9,20 @@
 
 ### USE DOCKER (NOT FINISHED YET)
 
-#### [Install xauth](https://www.youtube.com/watch?v=RDg6TRwiPtg)
-- xauth list to get the display cookie
-- xauth add + display cookie
+- [Install xauth](https://www.youtube.com/watch?v=RDg6TRwiPtg)
+  - xauth list to get the display cookie
+  - xauth add + display cookie
 
-#### [Install x11docker and launch it](https://techviewleo.com/run-gui-applications-in-docker-using-x11docker/)
+- [Install x11docker and launch it](https://techviewleo.com/run-gui-applications-in-docker-using-x11docker/)
 
-For Ubuntu Host: 
+- For Ubuntu Host: 
 ```
 sudo apt-get -y install xpra xserver-xephyr xinit xauth xclip x11-xserver-utils x11-utils
 xhost +
 sudo docker run --rm -ti --net=host -e DISPLAY=:0 image_name
 ```
 
-#### Last, Compile parfprocess.i
+- Last, Compile parfprocess.i
 ```
 cd /root/tf-openpose/tf_pose/pafprocess 
 swig -python -c++ pafprocess.i && python3 setup.py build_ext --inplace
