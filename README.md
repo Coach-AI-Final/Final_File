@@ -1,6 +1,6 @@
 # Final_File ------ BADMINTON-POSE-RECOGNITION
 
-## My Updates
+## Updates
 - 2020 - 10  Add newrunvideo.py 
 - 2020 - 10  Output keypoints as csv files in estimator.py
 - 2020 - 11  Apply player tracking in estimator.py
@@ -12,6 +12,7 @@
 - 2021 - 04 - 01 Update slow motion when hitting the ball and clean the integration
 - 2021 - 04 - 20 Update Basic GUI 
 - 2021 - 04 - 29 More integration works and Update GUI 
+- 2021 - 04 - 30 Updating Dockerfile
 
 ## TF_POSE_ESTIMATION 
 openpose is reference by https://github.com/ildoonet/tf-pose-estimation <br>
