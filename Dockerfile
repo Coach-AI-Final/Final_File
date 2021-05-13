@@ -11,8 +11,8 @@ RUN mkdir -p /root/tf-openpose
 RUN cd /root/tf-openpose
 RUN git clone https://github.com/Coach-AI-Final/Final_File.git
 
-COPY . /root/tf-openpose/
-WORKDIR /root/tf-openpose/
+#COPY . /root/tf-openpose/
+#WORKDIR /root/tf-openpose/
 
 # PIP INSTALL
 RUN cd /root/tf-openpose \
