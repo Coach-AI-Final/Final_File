@@ -1,5 +1,21 @@
 # Final_File ------ BADMINTON-POSE-RECOGNITION
 
+## Updates
+- 2020 - 10  Add newrunvideo.py 
+- 2020 - 10  Output keypoints as csv files in estimator.py
+- 2020 - 11  Apply player tracking in estimator.py
+- 2020 - 11  Update player tracking in estimator.py
+- 2020 - 11  Construct and training models to import by sklearn
+- 2020 - 12 - 20   Done background subtraction , bitwise and in file Background_subtraction
+- 2021 - 03 - 11  Move the result of background subtraction to the normal video
+- 2021 - 03 - 18  Intergrate Ball_predict , rally_segment, pose_estimation into final.py
+- 2021 - 04 - 01 Update slow motion when hitting the ball and clean the integration
+- 2021 - 04 - 20 Update Basic GUI 
+- 2021 - 04 - 29 More integration works and Update GUI 
+- 2021 - 04 - 30 Updating Dockerfile
+- 2021 - 05 - 13 Updating Dockerfile and integration
+
+
 ## Demo 
 ![image](https://user-images.githubusercontent.com/46586372/116519965-b36a8d00-a904-11eb-9caf-fad5e18e01c5.png)
 ![image](https://user-images.githubusercontent.com/46586372/116520057-ce3d0180-a904-11eb-8fb5-fa1fc55d16e1.png)
@@ -48,19 +64,7 @@ python final.py
 
 
 
-## Updates
-- 2020 - 10  Add newrunvideo.py 
-- 2020 - 10  Output keypoints as csv files in estimator.py
-- 2020 - 11  Apply player tracking in estimator.py
-- 2020 - 11  Update player tracking in estimator.py
-- 2020 - 11  Construct and training models to import by sklearn
-- 2020 - 12 - 20   Done background subtraction , bitwise and in file Background_subtraction
-- 2021 - 03 - 11  Move the result of background subtraction to the normal video
-- 2021 - 03 - 18  Intergrate Ball_predict , rally_segment, pose_estimation into final.py
-- 2021 - 04 - 01 Update slow motion when hitting the ball and clean the integration
-- 2021 - 04 - 20 Update Basic GUI 
-- 2021 - 04 - 29 More integration works and Update GUI 
-- 2021 - 04 - 30 Updating Dockerfile
+
 
 ## TF_POSE_ESTIMATION 
 openpose is reference by https://github.com/ildoonet/tf-pose-estimation <br>
