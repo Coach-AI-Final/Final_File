@@ -7,9 +7,9 @@ RUN apt-get update -yq \
 && apt-get install -yq git wget zip swig unzip build-essential python3 python3-opencv python3-pip python3-dev
 
 # FEATURE OBJECTION
-#RUN mkdir -p /root/tf-openpose
-#RUN cd /root/tf-openpose
-#RUN git clone https://github.com/Coach-AI-Final/Final_File.git
+RUN mkdir -p /root/tf-openpose
+RUN cd /root/tf-openpose
+RUN git clone https://github.com/Coach-AI-Final/Final_File.git
 
 COPY . /root/tf-openpose/
 WORKDIR /root/tf-openpose/
