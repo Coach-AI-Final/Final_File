@@ -11,6 +11,7 @@ import sys
 from Background_subtraction.background import background_subtraction
 from Rally_segment.denoise import interpolation_fun
 from Rally_segment.predict_v2 import rally_predict
+from Rally_segment.plot import plot
 from Ball_predict.ball_predict import ball_predict
 from Ball_predict.remove import remove
 import tkinter as tk
@@ -26,10 +27,9 @@ dir_path = "./"
 def run_main_program():
 
     #   rally segment
-    #os.system("python3 ./Rally_segment/Rearrange_Label.py ./  ./  ./RallySeg.csv")
     interpolation_fun(dir_path)
-    rally_predict("rally_predict")
-    os.system("python3 ./Rally_segment/plot.py")
+    rally_predict(dir_path)
+    plot(dir_path)
 
     #   ball type
     remove("remove")
@@ -40,7 +40,8 @@ def run_main_program():
     video_file = entry_video_file1.get()
     if len(video_file) <= 0 or video_file == ' ENTER VIDEO FILE':
         video_file = "./Background_subtraction/short1.mp4"
-    #background_subtraction(video_file)
+    
+    background_subtraction(video_file)
     os.system('python3 pose.py --model=mobilenet_thin --video=./temp/1_00_01.mp4 --write_video=./temp/final_output.mp4')
     
 def play_video():
