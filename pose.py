@@ -101,7 +101,9 @@ def overlay_img(dict, frame_num):
         img = cv2.imread('./temp/drive.png')
         img = cv2.resize(img, (70,70))
     else:
+        print(str(dict[frame_num]))
         print("ERROR")
+        img = None
 
     return img
 
