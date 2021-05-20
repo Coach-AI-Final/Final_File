@@ -185,13 +185,9 @@ if __name__ == '__main__':
         frame_num += 1
         pbar.update(int((frame_num / length) * 100))
 
-
-
         # video image
         ret_val, image = cap.read()
-        ret_val2, image2 = cap2.read()
-        
-        
+        ret_val2, image2 = cap2.read()       
         
         if(image is None):
             break
@@ -219,6 +215,7 @@ if __name__ == '__main__':
         
         else : 
             if closest(frame_list,frame_num) is None:
+                img = None
                 pass
             else:
                 cv2.putText(image, "Ball: %s" % (str(dict[closest(frame_list,frame_num)])),
@@ -226,7 +223,6 @@ if __name__ == '__main__':
                 img = overlay_img(dict, closest(frame_list,frame_num))         
 
         # overlay the image
-        img = None
         if img is not None: 
             alpha_mask = img[:, :, 2] / 255.0
             overlay_image_alpha(image,img,0,0,alpha_mask)
