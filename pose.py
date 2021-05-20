@@ -93,7 +93,7 @@ def overlay_img(dict, frame_num):
         img = cv2.imread('./temp/smash.png')
         img = cv2.resize(img, (70,70))
        
-    elif str(dict[frame_num]) == "small":
+    elif str(dict[frame_num]) == "short":
         img = cv2.imread('./temp/small.png')
         img = cv2.resize(img, (70,70))
         
