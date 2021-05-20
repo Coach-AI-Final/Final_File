@@ -226,6 +226,7 @@ if __name__ == '__main__':
                 img = overlay_img(dict, closest(frame_list,frame_num))         
 
         # overlay the image
+        img = None
         if img is not None: 
             alpha_mask = img[:, :, 2] / 255.0
             overlay_image_alpha(image,img,0,0,alpha_mask)
