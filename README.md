@@ -40,7 +40,7 @@ sudo docker run --rm -ti --net=host -e DISPLAY=:0 image_name
 - Update git 
 ```
 cd Final_File 
-git pull origin next
+git pull origin
 ```
 
 - Last, Compile parfprocess.i
