@@ -89,9 +89,19 @@ def overlay_img(dict, frame_num):
         img = cv2.imread('./temp/clear.png')
         img = cv2.resize(img, (70,70))
             
-    if str(dict[frame_num]) == "smash":
+    elif str(dict[frame_num]) == "smash":
         img = cv2.imread('./temp/smash.png')
         img = cv2.resize(img, (70,70))
+       
+    elif str(dict[frame_num]) == "small":
+        img = cv2.imread('./temp/small.png')
+        img = cv2.resize(img, (70,70))
+        
+    elif str(dict[frame_num]) == "drive":
+        img = cv2.imread('./temp/drive.png')
+        img = cv2.resize(img, (70,70))
+    else:
+        print("ERROR")
 
     return img
 
