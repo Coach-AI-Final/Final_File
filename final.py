@@ -45,7 +45,7 @@ def run_main_program():
     os.system('python3 pose.py --model=mobilenet_thin --video=./temp/1_00_01.mp4 --write_video=./temp/final_output.mp4')
     
 def play_video():
-    os.system("xdg-open ./final_output.mp4")
+    os.system("xdg-open ./temp/final_output.mp4")
 
 def show_image(command):
     os.system(command)
