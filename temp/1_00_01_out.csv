@@ -1,0 +1,10 @@
+frame,player,type
+27,B,short
+45,A,short
+74,B,short
+96,A,drive
+109,B,drive
+131,A,short
+154,B,short
+177,A,clear
+227,B,clear
