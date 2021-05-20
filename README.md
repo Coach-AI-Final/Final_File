@@ -14,6 +14,7 @@
 - 2021 - 04 - 29 More integration works and Update GUI 
 - 2021 - 04 - 30 Updating Dockerfile
 - 2021 - 05 - 13 Updating Dockerfile and integration
+- 2021 - 05 - 20 Updating Intergration and pushing docker image to docker hub
 
 
 ## Demo 
