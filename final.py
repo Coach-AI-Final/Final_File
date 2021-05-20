@@ -128,7 +128,6 @@ if __name__ == '__main__':
     btn1=Button(div3,text='RUN PROGRAM',bg='gray', fg='white', font=("arial","12","bold"), height=3, width=15, command=lambda:[run_main_program(), add_show_button()])
     btn1.grid(column=0, row=0, sticky=align_mode)
 
-
     define_layout(window, cols=2, rows=2)
     define_layout(div1)
     define_layout(div2, rows=2)
