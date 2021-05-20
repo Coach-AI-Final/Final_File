@@ -132,7 +132,7 @@ if __name__ == '__main__':
     define_layout(div1)
     define_layout(div2, rows=2)
     define_layout(div3, rows=4)
-
+    window.mainloop()
     window.mainloop()
 
 
