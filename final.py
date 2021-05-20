@@ -22,18 +22,18 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import Progressbar
 
-dir_path = "./"
+dir_path = "./temp/"
 
 def run_main_program():
 
     #   rally segment
-    interpolation_fun(dir_path)
+    interpolation_fun(dir_path) 
     rally_predict(dir_path)
     plot(dir_path)
 
     #   ball type
-    remove("remove")
-    ball_predict("ball_predict")
+    remove(dir_path)
+    ball_predict(dir_path)
 
     #   posture recognition
     video_file = tk.StringVar()
@@ -41,8 +41,8 @@ def run_main_program():
     if len(video_file) <= 0 or video_file == ' ENTER VIDEO FILE':
         video_file = "./Background_subtraction/short1.mp4"
     
-    background_subtraction(video_file)
-    os.system('python3 pose.py --model=mobilenet_thin --video=./temp/1_00_01.mp4 --write_video=./temp/final_output.mp4')
+    #background_subtraction(video_file)
+    #os.system('python3 pose.py --model=mobilenet_thin --video=./temp/1_00_01.mp4 --write_video=./temp/final_output.mp4')
     
 def play_video():
     os.system("xdg-open ./final_output.mp4")
