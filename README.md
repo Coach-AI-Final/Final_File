@@ -37,6 +37,11 @@ sudo apt-get -y install xpra xserver-xephyr xinit xauth xclip x11-xserver-utils 
 xhost +
 sudo docker run --rm -ti --net=host -e DISPLAY=:0 image_name
 ```
+- Update git 
+```
+cd Final_File 
+git pull origin next
+```
 
 - Last, Compile parfprocess.i
 ```
