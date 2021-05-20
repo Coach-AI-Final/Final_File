@@ -24,7 +24,7 @@
 
 ## HOW TO RUN THE CODE
 
-### USE DOCKER (NOT FINISHED YET)
+### USE DOCKER (SUGGESTED)
 
 - [Install xauth](https://www.youtube.com/watch?v=RDg6TRwiPtg)
   - xauth list to get the display cookie
