@@ -593,7 +593,7 @@ def ball_predict(dir_path):
 
             badminton_df = pd.get_dummies(badminton_df)
 
-            model = load("joblib_RL_Model.pkl")
+            model = load("./temp/joblib_RL_Model.pkl")
 
             y_pred = model.predict(badminton_df)
 
