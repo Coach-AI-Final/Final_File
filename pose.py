@@ -151,7 +151,7 @@ if __name__ == '__main__':
     frame_num = 0
 
     # add rally frame into a list
-    with open('./1_00_01_out.csv', newline='') as csvfile:
+    with open('./temp/1_00_01_out.csv', newline='') as csvfile:
         dict = {}
         rows = csv.reader(csvfile)
         record = []
