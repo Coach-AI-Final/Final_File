@@ -26,6 +26,8 @@
 
 ### USE DOCKER (SUGGESTED)
 
+[Docker image](https://hub.docker.com/r/chentzj/open_pose) 
+
 - [Install xauth](https://www.youtube.com/watch?v=RDg6TRwiPtg)
   - xauth list to get the display cookie
   - xauth add + display cookie
