@@ -38,7 +38,7 @@
 ```
 sudo apt-get -y install xpra xserver-xephyr xinit xauth xclip x11-xserver-utils x11-utils
 xhost +
-sudo docker run --rm -ti --net=host -e DISPLAY=:0 image_name
+sudo docker run --rm -ti --net=host -e DISPLAY=:0 --env QT_X11_NO_MITSHM=1 chentzj/open_pose:01
 ```
 - Update git 
 ```
