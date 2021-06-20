@@ -15,11 +15,13 @@
 - 2021 - 04 - 30 Updating Dockerfile
 - 2021 - 05 - 13 Updating Dockerfile and integration
 - 2021 - 05 - 20 Updating Intergration and pushing docker image to docker hub
-
+- 2021 - 06 - 20 Final update 
 
 ## Demo 
 ![image](https://user-images.githubusercontent.com/46586372/116519965-b36a8d00-a904-11eb-9caf-fad5e18e01c5.png)
 ![image](https://user-images.githubusercontent.com/46586372/116520057-ce3d0180-a904-11eb-8fb5-fa1fc55d16e1.png)
+### report video
+
 
 
 ## HOW TO RUN THE CODE
